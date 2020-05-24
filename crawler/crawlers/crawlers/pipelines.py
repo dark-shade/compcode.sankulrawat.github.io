@@ -20,6 +20,12 @@ class SqlitePipeline:
             if self.connection:
                 self.connection.close()
 
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(
+            sqlite_file=crawler.settings.get('SQLITE_FILE')
+        )
+
     def open_spider(self, spider):
         self.cursor.execute('CREATE TABLE IF NOT EXISTS leetcodedata ' \
                     '(id INTEGER PRIMARY KEY, solved INTEGER, total INTEGER, date TEXT)')
