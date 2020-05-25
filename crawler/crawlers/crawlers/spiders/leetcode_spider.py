@@ -17,5 +17,5 @@ class LeetCodeSpider(scrapy.Spider):
         yield {
             'solved': sols[0],
             'total': sols[2],
-            'date': date.today()
+            'date': str(date.today())
         }

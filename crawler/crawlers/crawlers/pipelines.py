@@ -12,13 +12,15 @@ import logging
 class SqlitePipeline:
     def __init__(self, sqlite_file):
         try:
+            logging.info("inside sqlite pipeline init")
             self.connection = sqlite3.connect(sqlite_file)
             self.cursor = self.connection.cursor()
+            if self.connection:
+                logging.info("db connection open")
+            else:
+                logging.info("unable to open connection to db")
         except Error as e:
             logging.error(e)
-        finally:
-            if self.connection:
-                self.connection.close()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -27,13 +29,16 @@ class SqlitePipeline:
         )
 
     def open_spider(self, spider):
+        logging.info("creating leetcodedata table if not exists")
         self.cursor.execute('CREATE TABLE IF NOT EXISTS leetcodedata ' \
                     '(id INTEGER PRIMARY KEY, solved INTEGER, total INTEGER, date TEXT)')
 
     def close_spider(self, spider):
+        logging.info("closing commit and connection")
         self.connection.commit()
         self.connection.close()
 
     def process_item(self, item, spider):
-        self.cursor.execute('INSERT INTO leetcodedata (solved, total, date) VALUES (?, ?, ?)', item["solved"], item["total"], item["date"])
+        logging.info("inserting data into leetcodedata table")
+        self.cursor.execute('INSERT INTO leetcodedata (solved, total, date) VALUES (?, ?, ?)', (item["solved"], item["total"], item["date"]))
         return item
