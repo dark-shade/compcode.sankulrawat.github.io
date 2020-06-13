@@ -1,0 +1,2 @@
+response.css('li.list-group-item span::text')[4].get()
+response.css('span.badge.progress-bar-success::text')[3].get()
